@@ -139,10 +139,12 @@ fun BookRow(book: Item, navController: NavController) {
         Row(modifier = Modifier.padding(5.dp),
             verticalAlignment = Alignment.Top) {
 
-            val imageUrl: String = if(book.volumeInfo.imageLinks.smallThumbnail.isEmpty())
-                "https://images.unsplash.com/photo-1541963463532-d68292c34b19?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=80&q=80"
+            var imageUrl =  "https://images.unsplash.com/photo-1541963463532-d68292c34b19?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=80&q=80"
+
+           if(book.volumeInfo.imageLinks?.smallThumbnail?.isEmpty() == true)
+               imageUrl = "https://images.unsplash.com/photo-1541963463532-d68292c34b19?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=80&q=80"
             else {
-                book.volumeInfo.imageLinks.smallThumbnail
+               imageUrl = book.volumeInfo?.imageLinks?.smallThumbnail.toString()
             }
             /*val imageUrl: String =
                 "https://images.unsplash.com/photo-1541963463532-d68292c34b19?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=80&q=80"*/
@@ -156,7 +158,7 @@ fun BookRow(book: Item, navController: NavController) {
             )
 
             Column {
-                Text(text = book.volumeInfo.title.toString(), overflow = TextOverflow.Ellipsis)
+                Text(text = book.volumeInfo.title, overflow = TextOverflow.Ellipsis)
                 Text(text =  "Author: ${book.volumeInfo.authors}",
                     overflow = TextOverflow.Clip,
                     fontStyle = FontStyle.Italic,
@@ -171,6 +173,8 @@ fun BookRow(book: Item, navController: NavController) {
                     overflow = TextOverflow.Clip,
                     fontStyle = FontStyle.Italic,
                     style = MaterialTheme.typography.titleMedium)
+
+
             }
         }
 

@@ -19,6 +19,7 @@ import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
@@ -71,20 +72,25 @@ fun ReaderHomeScreen(navController: NavHostController,
 
 @Composable
 fun HomeContent(navController: NavHostController, viewModel: HomeScreenViewModel) {
-    val listOfBooks = listOf(
-        MBook(id = "dadfa", title = "Hello Again", authors = "All of us", notes = null),
-        MBook(id = "dadfa", title = " Again", authors = "All of us", notes = null),
-        MBook(id = "dadfa", title = "Hello ", authors = "The world us", notes = null),
-        MBook(id = "dadfa", title = "Hello Again", authors = "All of us", notes = null),
-        MBook(id = "dadfa", title = "Hello Again", authors = "All of us", notes = null))
 
 
+    var listOfBooks = emptyList<MBook>()
+    val currentUser = FirebaseAuth.getInstance().currentUser
 
-    val currentUserName = if(!FirebaseAuth.getInstance().currentUser?.email.isNullOrEmpty()){
-        FirebaseAuth.getInstance().currentUser?.email?.split("@")?.get(0)
-    }else{
-        "N/A"
+    if (!viewModel.data.value.data.isNullOrEmpty()) {
+        listOfBooks = viewModel.data.value.data!!.toList().filter { mBook ->
+            mBook.userId == currentUser?.uid.toString()
+        }
+
+        Log.d("Books", "HomeContent: ${listOfBooks.toString()}")
     }
+
+    val email = FirebaseAuth.getInstance().currentUser?.email
+    val currentUserName = if (!email.isNullOrEmpty())
+        FirebaseAuth.getInstance().currentUser?.email?.split("@")
+            ?.get(0)else
+        "N/A"
+
 
     Column(Modifier.padding(2.dp),
         verticalArrangement = Arrangement.Top) {
@@ -123,6 +129,7 @@ fun HomeContent(navController: NavHostController, viewModel: HomeScreenViewModel
 
 @Composable
 fun BookListArea(listOfBooks: List<MBook>, navController: NavHostController) {
+
     val addedBooks = listOfBooks.filter { mBook ->
         mBook.startedReading == null && mBook.finishedReading == null
     }
@@ -160,10 +167,11 @@ fun HorizontalScrollableComponent(listOfBooks: List<MBook>,
         .fillMaxWidth()
         .heightIn(280.dp)
         .horizontalScroll(scrollState)) {
-       /* if (viewModel.data.value.loading == true) {
+        if (viewModel.data.value.loading == true) {
+
             LinearProgressIndicator()
 
-        }else {*/
+        }else {
             if (listOfBooks.isNullOrEmpty()){
                 Surface(modifier = Modifier.padding(23.dp)) {
                     Text(text = "No books found. Add a Book",
@@ -183,6 +191,6 @@ fun HorizontalScrollableComponent(listOfBooks: List<MBook>,
                 }
             }
 
-       // }
+        }
     }
 }

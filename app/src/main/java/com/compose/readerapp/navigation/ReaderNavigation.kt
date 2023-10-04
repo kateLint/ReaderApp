@@ -9,17 +9,20 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.compose.readerapp.screens.ReaderSplashScreen
 import com.compose.readerapp.screens.details.BookDetailsScreen
+import com.compose.readerapp.screens.home.HomeScreenViewModel
 import com.compose.readerapp.screens.home.ReaderHomeScreen
 import com.compose.readerapp.screens.login.ReaderLoginScreen
 import com.compose.readerapp.screens.search.BooksSearchViewModel
 import com.compose.readerapp.screens.search.ReaderBookSearchScreen
-import com.compose.readerapp.screens.stats.ReaderStatScreen
+import com.compose.readerapp.screens.stats.ReaderStatsScreen
 import com.compose.readerapp.screens.update.ReaderBookUpdateScreen
 
 @Composable
-fun ReaderNavigation(){
+fun ReaderNavigation() {
     val navController = rememberNavController()
-    NavHost(navController = navController, startDestination = ReaderScreens.SplashScreen.name){
+    NavHost(navController = navController,
+        startDestination = ReaderScreens.SplashScreen.name ){
+
         composable(ReaderScreens.SplashScreen.name) {
             ReaderSplashScreen(navController = navController)
         }
@@ -28,35 +31,45 @@ fun ReaderNavigation(){
         }
 
         composable(ReaderScreens.ReaderStatsScreen.name) {
-        //    val homeViewModel = hiltViewModel<HomeScreenViewModel>()
-            ReaderStatScreen(navController= navController)
+            val homeViewModel = hiltViewModel<HomeScreenViewModel>()
+            ReaderStatsScreen(navController = navController, viewModel = homeViewModel)
         }
 
         composable(ReaderScreens.ReaderHomeScreen.name) {
-        //    val homeViewModel = hiltViewModel<HomeScreenViewModel>()
-            ReaderHomeScreen(navController = navController)
+            val homeViewModel = hiltViewModel<HomeScreenViewModel>()
+            ReaderHomeScreen(navController = navController, viewModel = homeViewModel)
         }
 
         composable(ReaderScreens.SearchScreen.name) {
             val searchViewModel = hiltViewModel<BooksSearchViewModel>()
-            ReaderBookSearchScreen(navController = navController, searchViewModel)
+
+            ReaderBookSearchScreen(navController = navController, viewModel = searchViewModel)
         }
 
-        composable(ReaderScreens.UpdateScreen.name) {
-            //  val searchViewModel = hiltViewModel<BooksSearchViewModel>()
 
-            ReaderBookUpdateScreen(navController = navController)
-        }
 
-        val detailsName = ReaderScreens.DetailScreen.name
-        composable("$detailsName/{bookId}", arguments = listOf(navArgument("bookId"){
+        val detailName = ReaderScreens.DetailScreen.name
+        composable("$detailName/{bookId}", arguments = listOf(navArgument("bookId"){
             type = NavType.StringType
-        })) {backStackEntry ->
+        })) { backStackEntry ->
             backStackEntry.arguments?.getString("bookId").let {
+
                 BookDetailsScreen(navController = navController, bookId = it.toString())
             }
-            //    val homeViewModel = hiltViewModel<HomeScreenViewModel>()
+        }
+
+        val updateName = ReaderScreens.UpdateScreen.name
+        composable("$updateName/{bookItemId}",
+            arguments = listOf(navArgument("bookItemId") {
+                type = NavType.StringType
+            })) { navBackStackEntry ->
+
+            navBackStackEntry.arguments?.getString("bookItemId").let {
+                ReaderBookUpdateScreen(navController = navController, bookItemId = it.toString())
+            }
 
         }
+
     }
+
 }

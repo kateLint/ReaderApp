@@ -53,8 +53,8 @@ fun ReaderSplashScreen(navController: NavHostController) {
 */
 
         //Kate change
-        //navController.navigate(ReaderScreens.LoginScreen.name)
-        navController.navigate(ReaderScreens.ReaderHomeScreen.name)
+        navController.navigate(ReaderScreens.LoginScreen.name)
+      //  navController.navigate(ReaderScreens.ReaderHomeScreen.name)
 
     }
 

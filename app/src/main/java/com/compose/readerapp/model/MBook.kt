@@ -2,7 +2,7 @@ package com.compose.readerapp.model
 
 import com.google.firebase.firestore.Exclude
 import com.google.firebase.firestore.PropertyName
-import java.security.Timestamp
+import com.google.firebase.Timestamp
 
 data class MBook(
     @Exclude var id: String? = null,

@@ -98,9 +98,9 @@ fun UserForm(
 
 ){
     val email = rememberSaveable {
-        mutableStateOf("")
+        mutableStateOf("me@me.com")
     }
-    val password = rememberSaveable { mutableStateOf("") }
+    val password = rememberSaveable { mutableStateOf("testtest") }
 
     val passwordVisibility = rememberSaveable {
         mutableStateOf(false)
@@ -125,7 +125,9 @@ fun UserForm(
         ) else Text("")
         EmailInput(
             modifier = Modifier.padding(10.dp),
-            emailState = email, enabled = !loading,
+            emailState = email,
+
+            enabled = !loading,
             onAction = KeyboardActions {
                 passwordFocusRequest.requestFocus()
             },
@@ -141,6 +143,7 @@ fun UserForm(
             passwordVisibility = passwordVisibility,
             onAction = KeyboardActions {
                 if (!valid) return@KeyboardActions
+
                 onDone(email.value.trim(), password.value.trim())
             })
 
